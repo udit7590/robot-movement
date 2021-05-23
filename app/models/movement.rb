@@ -4,7 +4,7 @@ class Movement < ApplicationRecord
   }
 
   belongs_to :u_robot
-  belongs_to :area
+  belongs_to :area, optional: true
 
   after_initialize :assign_area
   after_initialize :assign_default_step

@@ -3,7 +3,7 @@ class URobot < ApplicationRecord
   has_many :movements, dependent: :destroy
 
   def current_position
-    area_positions.last
+    area_positions.order(id: :desc).first
   end
 
   def current_area

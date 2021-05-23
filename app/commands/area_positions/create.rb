@@ -7,7 +7,7 @@ module AreaPositions
         success!
       else
         self.response = result.response
-        self.errors = result.errors
+        self.errors.merge!(result.errors)
         fail!
       end
     end
