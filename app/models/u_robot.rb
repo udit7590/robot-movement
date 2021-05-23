@@ -1,13 +1,13 @@
 class URobot < ApplicationRecord
-  has_many :area_positions
-  has_many :movements
-
-  def current_area
-    current_position&.area
-  end
+  has_many :area_positions, dependent: :destroy
+  has_many :movements, dependent: :destroy
 
   def current_position
     area_positions.last
+  end
+
+  def current_area
+    current_position&.area
   end
 
   def placed?

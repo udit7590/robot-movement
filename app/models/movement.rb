@@ -6,15 +6,15 @@ class Movement < ApplicationRecord
   belongs_to :u_robot
   belongs_to :area
 
-  before_validation :assign_area
-  before_validation :assign_default_step
+  after_initialize :assign_area
+  after_initialize :assign_default_step
 
   private
   def assign_area
-    self.area = u_robot.current_position&.area
+    self.area = u_robot&.current_position&.area
   end
 
   def assign_default_step
-    forward! if step.blank?
+    self.step = 'forward' if step.blank?
   end
 end

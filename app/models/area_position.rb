@@ -8,10 +8,10 @@ class AreaPosition < ApplicationRecord
 
   scope :initial, -> { where(initial: true) }
 
-  before_validation :assign_default_face
+  after_initialize :assign_default_face
 
   private
   def assign_default_face
-    north! if self.face.blank?
+    self.face = 'north' if face.blank?
   end
 end
