@@ -1,0 +1,14 @@
+.notice-container {
+  background-color: green;
+}
+.notice-message {
+  color: white;
+  text-align: center;
+}
+.alert-container {
+  background-color: red;
+}
+.alert-message {
+  color: white;
+  text-align: center;
+}
