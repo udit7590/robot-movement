@@ -12,6 +12,16 @@
 * rails s
 
 ### Direction
+```
   N
 W   E
   S
+```
+
+### Test Instructions
+- rails c
+- RobotMovementTester.call
+- Follow on-screen instructions
+
+### Test Cases
+- rspec spec
