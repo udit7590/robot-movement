@@ -1,11 +1,12 @@
 class RobotMovementTester
-  attr_accessor :robot, :area
+  attr_accessor :robot, :area, :file
 
-  def self.call
-    new.call
+  def self.call(filename=nil)
+    new(filename).call
   end
 
-  def initialize
+  def initialize(filename=nil)
+    @file  = filename
     @robot = URobot.first
     @area  = Area.first
   end
@@ -15,8 +16,13 @@ class RobotMovementTester
     Rails.logger.level = Logger::ERROR
 
     welcome
-    help
-    user_inputs
+
+    if file.present?
+      file_inputs
+    else
+      help
+      user_inputs
+    end
 
     Rails.logger.level = initial_debug_level
   end
@@ -28,42 +34,58 @@ class RobotMovementTester
     p '#'*50
   end
 
+  def file_inputs
+    File.readlines(file).each do |input|
+      p '-'*50
+      p "> #{input}"
+      p '-'*50
+      input_processor(input.chomp.strip)
+    end
+  end
+
   def user_inputs
     p 'FIRST INPUT'
     input = gets.chomp.strip
-    while(input.present? && input.upcase != 'EXIT')
-      case input.upcase
-      when 'MOVE'
-        mmt = Movements::Create.call(movement(input))
-        response(mmt)
-      when 'LEFT'
-        mmt = Movements::Create.call(movement(input))
-        response(mmt)
-      when 'RIGHT'
-        mmt = Movements::Create.call(movement(input))
-        response(mmt)
-      when 'HELP'
-        help
-      when 'EXIT'
-      when ''
-      when 'REPORT'
-        cmd = Robots::Report.call(robot)
-        report(cmd)
-      else
-        splits = input.split(' ')
-        if splits.size > 2
-          p 'INVALID INPUT!'
-          help
-        else
-          val = splits[1]
-          x, y, face = val.split(',').map(&:strip)
-          cmd = AreaPositions::Create.call(position(x, y, face))
-          response(cmd)
-        end
-      end
 
+    while input.present? && input.upcase != 'EXIT'
+      input_processor(input)
       p 'NEXT INPUT'
       input = gets.chomp
+    end
+  end
+
+  def input_processor(input)
+    return if input.blank? || input.upcase == 'EXIT'
+
+    case input.upcase
+    when 'MOVE'
+      mmt = Movements::Create.call(movement(input))
+      response(mmt)
+    when 'LEFT'
+      mmt = Movements::Create.call(movement(input))
+      response(mmt)
+    when 'RIGHT'
+      mmt = Movements::Create.call(movement(input))
+      response(mmt)
+    when 'HELP'
+      help
+    when 'REPORT'
+      cmd = Robots::Report.call(robot)
+      report(cmd)
+    when /^(ROBOT)/
+      name = input.split(' ')[1]
+      @robot = URobot.create!(name: name)
+    else
+      splits = input.split(' ')
+      if splits.size > 2
+        p 'INVALID INPUT!'
+        help
+      else
+        val = splits[1]
+        x, y, face = val.split(',').map(&:strip)
+        cmd = AreaPositions::Create.call(position(x, y, face))
+        response(cmd)
+      end
     end
   end
 
@@ -96,6 +118,7 @@ class RobotMovementTester
   end
 
   def display_errors(errors)
+    p '?'*50
     p 'ERROR!'
     messages = []
     errors.each do |key, value|
@@ -106,6 +129,7 @@ class RobotMovementTester
       end
     end
     p messages.flatten.join("\n")
+    p '?'*50
   end
 
   def report(cmd)
@@ -113,7 +137,7 @@ class RobotMovementTester
     if pos.blank?
       p 'Robot not placed anywhere yet!'
     else
-      p "X: #{pos.x}, Y: #{pos.y}, FACE: #{pos.face}"
+      p "#{pos.x}, #{pos.y}, #{pos.face.upcase}"
     end
   end
 
@@ -122,15 +146,17 @@ class RobotMovementTester
     p '*'*50
     p 'COMMAND OPTIONS'
     p '#'*50
-    p 'PLACE <X>,<Y>,<DIRECTION>'
-    p '<MOVEMENT>'
-    p 'REPORT'
-    p 'HELP'
-    p 'EXIT'
+    p '1. PLACE <X>,<Y>,<DIRECTION>'
+    p '2. <MOVEMENT>'
+    p '3. REPORT'
+    p '4. HELP'
+    p '5. EXIT (or leave blank)'
+    p '6. ROBOT <name>'
     p '#'*50
     p 'X,Y = INTEGER'
     p 'DIRECTION = NORTH | SOUTH | EAST | WEST'
     p 'MOVEMENT = LEFT | RIGHT | MOVE'
+    p 'name = Any name for new robot to start'
     p '*'*50
     p ''
   end

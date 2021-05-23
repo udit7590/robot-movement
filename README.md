@@ -12,10 +12,21 @@
 * rails s
 
 ### How to Test?
+* Option 1: Use custom inputs
 This is essentially designed to be a command line application to test right now. Please follow following instructions:
 - rails c
 - RobotMovementTester.call
 - Follow on-screen instructions
+
+* Option 2: Use provided test scenarios
+- rake simulator:run[spec/fixtures/simulator/input1.txt]
+- rake simulator:run[spec/fixtures/simulator/input2.txt]
+- rake simulator:run[spec/fixtures/simulator/input3.txt]
+
+* Option 3: Use custom file inputs
+- Create a txt file in `spec/fixtures/simulator` folder and enter your inputs there
+- Pass your file name in the command below
+`rake simulator:run[spec/fixtures/simulator/<your_file_name>.txt]`
 
 ### Direction
 ```
