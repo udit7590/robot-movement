@@ -83,7 +83,7 @@ class RobotMovementTester
       else
         val = splits[1]
         x, y, face = val.split(',').map(&:strip)
-        cmd = AreaPositions::Create.call(position(x, y, face))
+        cmd = AreaPositions::Create.call(position(x, y, face), true)
         response(cmd)
       end
     end

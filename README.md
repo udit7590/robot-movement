@@ -6,27 +6,32 @@
 * AreaPosition (x, y, face, initial) - references :robot, :area
 * Movement (step) - references :robot, :area
 
-### Starting Project
-* bundle install
-* rails db:create; rails db:migrate OR rails db:schema:load; rails db:seed
-* rails s
+### Configuring the Project
+* `bundle install`
+* `yarn install`
+* `rails db:create`
+* `rails db:migrate` OR `rails db:schema:load`
+* `rails db:seed`
 
 ### How to Test?
-* Option 1: Use custom inputs
+#### Option 1: Use custom inputs
 This is essentially designed to be a command line application to test right now. Please follow following instructions:
-- rails c
-- RobotMovementTester.call
-- Follow on-screen instructions
+- `rails c`
+- `RobotMovementTester.call`
+- **Follow on-screen instructions**
 
-* Option 2: Use provided test scenarios
-- rake simulator:run[spec/fixtures/simulator/input1.txt]
-- rake simulator:run[spec/fixtures/simulator/input2.txt]
-- rake simulator:run[spec/fixtures/simulator/input3.txt]
+#### Option 2: Use provided test scenarios
+- `rake simulator:run[spec/fixtures/simulator/input1.txt]`
+- `rake simulator:run[spec/fixtures/simulator/input2.txt]`
+- `rake simulator:run[spec/fixtures/simulator/input3.txt]`
 
-* Option 3: Use custom file inputs
+#### Option 3: Use custom file inputs
 - Create a txt file in `spec/fixtures/simulator` folder and enter your inputs there
 - Pass your file name in the command below
 `rake simulator:run[spec/fixtures/simulator/<your_file_name>.txt]`
+
+### Starting the Project (to work with web version)
+* `rails s`
 
 ### Direction
 ```
