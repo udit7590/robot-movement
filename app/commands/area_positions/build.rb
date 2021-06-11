@@ -19,10 +19,11 @@ module AreaPositions
     end
 
     def valid?
-      super { bounds_valid? }
+      super { bounds_valid? && not_colliding? }
     end
 
     def bounds_valid?
+      debugger
       valid_x = begin
         model.x.to_i >= area.x_min &&
         model.x.to_i <= area.x_max
@@ -39,6 +40,17 @@ module AreaPositions
       unless valid_y
         errors[:cmd] ||= []
         errors[:cmd] << 'New position Y value is not within area bounds'
+      end
+    end
+
+    def not_colliding?
+      debugger
+      area.u_robots.each do |robot|
+        cur = robot.current_position
+        if cur.x.to_i == model.x.to_i && cur.y.to_i == model.y.to_i
+          errors[:cmd] ||= []
+          errors[:cmd] << "Another robot #{robot.name} is present on the position"
+        end
       end
     end
   end

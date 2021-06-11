@@ -57,6 +57,13 @@ class RobotMovementTester
   def input_processor(input)
     return if input.blank? || input.upcase == 'EXIT'
 
+    robot_name  = input.split(' ')[0]
+    if robot_name != 'ROBOT'
+      input = input.split(' ')[1..-1].join(' ')
+      @robot = URobot.find_by(name: robot_name.downcase)
+      raise 'No such robot' if @robot.blank?
+    end
+
     case input.upcase
     when 'MOVE'
       mmt = Movements::Create.call(movement(input))
@@ -74,7 +81,7 @@ class RobotMovementTester
       report(cmd)
     when /^(ROBOT)/
       name = input.split(' ')[1]
-      @robot = URobot.create!(name: name)
+      @robot = URobot.create!(name: name.downcase)
     else
       splits = input.split(' ')
       if splits.size > 2

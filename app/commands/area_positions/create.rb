@@ -1,6 +1,7 @@
 module AreaPositions
   class Create < AreaPositions::Build
     def run
+      debugger
       result = AreaPositions::Build.call(model, initial)
       if result.success?
         model.save!
